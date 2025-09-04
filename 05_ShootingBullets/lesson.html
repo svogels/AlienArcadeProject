@@ -1,26 +1,57 @@
-### Activity 5: Shooting Bullets
-### Time: 60 min
-### 🎯 Learning Intention:
-Our goal is to make the player shoot a bullet when the spacebar is pressed.
-### 👍Success Criteria:
-*   I can detect when the spacebar is pressed.
-*   When the spacebar is pressed, a new "bullet" rectangle appears at the player's position.
-*   The bullet moves up the screen until it disappears.
-### 💡 New Concepts We'll Learn:
-*   **Lists:** A type of variable that can hold a collection of items, like a list of all the bullets currently on the screen.
-*   **For Loops:** A way to repeat a block of code for each item in a list.
-*   **Collision Detection (Simple):** Checking if two shapes are overlapping.
-### 🤔 What is a List?
-Imagine you have a shopping list. You can add items to it (`milk`, `bread`), remove items (`bread`), and check what's on it. A Python `list` is just like that, but for data. We can create an empty list called `bullets` and whenever the player shoots, we add the new bullet's rectangle to this list. This lets us keep track of multiple bullets on the screen at once.
-### 🤔 What is a For Loop?
-A `for` loop is different from the `while` loop we've been using. Our `while running:` loop goes on forever (as long as `running` is true). A `for` loop, on the other hand, goes through a list of items one by one and does something with each of them. For example, `for bullet in bullets:` means "for every single bullet that is currently in our `bullets` list, do the following...". This is perfect for moving and drawing every bullet on the screen.
-### 🎮 How We'll Use It in Our Game:
-*   **Lists:** We will create an empty list called `bullets = []`. When the player presses the spacebar, we will create a new rectangle for the bullet and `append()` it to our `bullets` list.
-*   **For Loops:** We will create a `for` loop that iterates through the `bullets` list. Inside this loop, we will update the Y-coordinate of each bullet to make it move up the screen. We will also draw each bullet.
-*   **Collision Detection:** We'll add a simple check. If a bullet's Y-coordinate is less than 0, it means it has gone off the top of the screen, and we can remove it from our list.
-### ✍️ Let's Code: Step-by-Step
-```python
-import pygame
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 5: Shooting Bullets</title>
+    <link rel="stylesheet" href="../lesson_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', (event) => { document.querySelectorAll('pre code').forEach((el) => { hljs.highlightElement(el); }); });</script>
+</head>
+<body>
+    <div class="container">
+        <h1>Activity 5: Shooting Bullets</h1>
+        <h3>Time: 60 min</h3>
+        <div class="lesson-section">
+            <h3>🎯 Learning Intention:</h3>
+            <p>Our goal is to make the player shoot a bullet when the spacebar is pressed.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>👍Success Criteria:</h3>
+            <ul>
+                <li>I can detect when the spacebar is pressed.</li>
+                <li>When the spacebar is pressed, a new "bullet" rectangle appears at the player's position.</li>
+                <li>The bullet moves up the screen until it disappears.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li><strong>Lists:</strong> A type of variable that can hold a collection of items, like a list of all the bullets currently on the screen.</li>
+                <li><strong>For Loops:</strong> A way to repeat a block of code for each item in a list.</li>
+                <li><strong>Collision Detection (Simple):</strong> Checking if two shapes are overlapping.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What is a List?</h3>
+            <p>Imagine you have a shopping list. You can add items to it (<code>milk</code>, <code>bread`), remove items (<code>bread</code>), and check what's on it. A Python <code>list</code> is just like that, but for data. We can create an empty list called <code>bullets</code> and whenever the player shoots, we add the new bullet's rectangle to this list. This lets us keep track of multiple bullets on the screen at once.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What is a For Loop?</h3>
+            <p>A <code>for</code> loop is different from the <code>while</code> loop we've been using. Our <code>while running:</code> loop goes on forever (as long as <code>running</code> is true). A <code>for</code> loop, on the other hand, goes through a list of items one by one and does something with each of them. For example, <code>for bullet in bullets:</code> means "for every single bullet that is currently in our <code>bullets</code> list, do the following...". This is perfect for moving and drawing every bullet on the screen.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <ul>
+                <li><strong>Lists:</strong> We will create an empty list called <code>bullets = []</code>. When the player presses the spacebar, we will create a new rectangle for the bullet and <code>append()</code> it to our <code>bullets</code> list.</li>
+                <li><strong>For Loops:</strong> We will create a <code>for</code> loop that iterates through the <code>bullets</code> list. Inside this loop, we will update the Y-coordinate of each bullet to make it move up the screen. We will also draw each bullet.</li>
+                <li><strong>Collision Detection:</strong> We'll add a simple check. If a bullet's Y-coordinate is less than 0, it means it has gone off the top of the screen, and we can remove it from our list.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>✍️ Let's Code: Step-by-Step</h3>
+            <pre><code class="language-python">import pygame
 pygame.init()
 
 screen_width = 800
@@ -109,10 +140,11 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ✅ Full Code for This Activity:
-```python
-import pygame
+</code></pre>
+        </div>
+        <div class="lesson-section">
+            <h3>✅ Full Code for This Activity:</h3>
+            <pre><code class="language-python">import pygame
 
 pygame.init()
 
@@ -195,6 +227,12 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ⭐ Challenge Task:
-Can you make the bullets wider or taller? Try changing the `bullet_width` and `bullet_height` variables. Also, try making the bullets faster or slower by changing `bullet_speed`. What happens if you make the speed a negative number?
+</code></pre>
+        </div>
+        <div class="challenge">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you make the bullets wider or taller? Try changing the <code>bullet_width</code> and <code>bullet_height</code> variables. Also, try making the bullets faster or slower by changing <code>bullet_speed</code>. What happens if you make the speed a negative number?</p>
+        </div>
+    </div>
+</body>
+</html>

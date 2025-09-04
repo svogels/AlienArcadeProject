@@ -1,24 +1,55 @@
-### Activity 8: Adding a Timer and End Screen
-### Time: 60 min
-### 🎯 Learning Intention:
-Our goal is to add a countdown timer to the game and show a "Game Over" screen when time runs out.
-### 👍Success Criteria:
-*   I can display a timer on the screen that counts down every second.
-*   When the timer reaches zero, the game stops.
-*   A "Game Over" message and the final score are displayed on the screen.
-### 💡 New Concepts We'll Learn:
-*   **Time Management:** Using Pygame's clock to measure time and create a countdown.
-*   **Game States:** Managing different phases of the game, such as the "playing" state and the "game over" state.
-### 🤔 What is Time Management in Pygame?
-Pygame has a built-in `Clock` that helps us control the flow of time. We can get the number of milliseconds that have passed since the game started. By keeping track of this, we can create a countdown timer. We'll set a start time when the game begins and then, inside the loop, we'll calculate how many seconds are left by subtracting the current time from the total game duration.
-### 🤔 What are Game States?
-Think of a DVD player. It can be in a "playing" state, a "paused" state, or a "menu" state. Our game is similar. Right now, it only has one state: "playing". We are going to add a "game over" state. We'll use a variable, let's call it `game_over`, and set it to `False` at the start. When the timer runs out, we'll set `game_over = True`. We can then use an `if` statement to change what happens in our game loop. If `game_over` is `False`, we run the normal game logic. If it's `True`, we stop the game and show the end screen instead.
-### 🎮 How We'll Use It in Our Game:
-*   **Time Management:** We will use `pygame.time.get_ticks()` to get the current time. We'll set a variable for the total game duration (e.g., 30 seconds) and calculate the time remaining. We'll then render and blit this timer to the screen, just like we did with the score.
-*   **Game States:** We will create a `game_over = False` variable. Inside the game loop, we'll have a big `if not game_over:` block that contains all our current game logic (moving the player, shooting, etc.). When the timer reaches zero, we'll set `game_over = True`. We'll then add an `else:` block to handle drawing the "Game Over" screen.
-### ✍️ Let's Code: Step-by-Step
-```python
-import pygame
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 8: Adding a Timer and End Screen</title>
+    <link rel="stylesheet" href="../lesson_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', (event) => { document.querySelectorAll('pre code').forEach((el) => { hljs.highlightElement(el); }); });</script>
+</head>
+<body>
+    <div class="container">
+        <h1>Activity 8: Adding a Timer and End Screen</h1>
+        <h3>Time: 60 min</h3>
+        <div class="lesson-section">
+            <h3>🎯 Learning Intention:</h3>
+            <p>Our goal is to add a countdown timer to the game and show a "Game Over" screen when time runs out.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>👍Success Criteria:</h3>
+            <ul>
+                <li>I can display a timer on the screen that counts down every second.</li>
+                <li>When the timer reaches zero, the game stops.</li>
+                <li>A "Game Over" message and the final score are displayed on the screen.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li><strong>Time Management:</strong> Using Pygame's clock to measure time and create a countdown.</li>
+                <li><strong>Game States:</strong> Managing different phases of the game, such as the "playing" state and the "game over" state.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What is Time Management in Pygame?</h3>
+            <p>Pygame has a built-in <code>Clock</code> that helps us control the flow of time. We can get the number of milliseconds that have passed since the game started. By keeping track of this, we can create a countdown timer. We'll set a start time when the game begins and then, inside the loop, we'll calculate how many seconds are left by subtracting the current time from the total game duration.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What are Game States?</h3>
+            <p>Think of a DVD player. It can be in a "playing" state, a "paused" state, or a "menu" state. Our game is similar. Right now, it only has one state: "playing". We are going to add a "game over" state. We'll use a variable, let's call it <code>game_over</code>, and set it to <code>False</code> at the start. When the timer runs out, we'll set <code>game_over = True</code>. We can then use an <code>if</code> statement to change what happens in our game loop. If <code>game_over</code> is <code>False</code>, we run the normal game logic. If it's <code>True</code>, we stop the game and show the end screen instead.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <ul>
+                <li><strong>Time Management:</strong> We will use <code>pygame.time.get_ticks()</code> to get the current time. We'll set a variable for the total game duration (e.g., 30 seconds) and calculate the time remaining. We'll then render and blit this timer to the screen, just like we did with the score.</li>
+                <li><strong>Game States:</strong> We will create a <code>game_over = False</code> variable. Inside the game loop, we'll have a big <code>if not game_over:</code> block that contains all our current game logic (moving the player, shooting, etc.). When the timer reaches zero, we'll set <code>game_over = True</code>. We'll then add an <code>else:</code> block to handle drawing the "Game Over" screen.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>✍️ Let's Code: Step-by-Step</h3>
+            <pre><code class="language-python">import pygame
 import random
 
 # ... (initialization, setup, variables)
@@ -77,10 +108,11 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ✅ Full Code for This Activity:
-```python
-import pygame
+</code></pre>
+        </div>
+        <div class="lesson-section">
+            <h3>✅ Full Code for This Activity:</h3>
+            <pre><code class="language-python">import pygame
 import random
 
 pygame.mixer.init()
@@ -198,6 +230,12 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ⭐ Challenge Task:
-Can you add a "Press R to Restart" message to the game over screen? After the game is over, you'll need to check for a new `KEYDOWN` event for the 'R' key (`pygame.K_r`). If it's pressed, you'll need to reset all the game state variables back to their starting values (score to 0, `game_over` to `False`, `start_time` to the current time, etc.) to start a new game.
+</code></pre>
+        </div>
+        <div class="challenge">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you add a "Press R to Restart" message to the game over screen? After the game is over, you'll need to check for a new <code>KEYDOWN</code> event for the 'R' key (<code>pygame.K_r</code>). If it's pressed, you'll need to reset all the game state variables back to their starting values (score to 0, <code>game_over</code> to <code>False</code>, <code>start_time</code> to the current time, etc.) to start a new game.</p>
+        </div>
+    </div>
+</body>
+</html>

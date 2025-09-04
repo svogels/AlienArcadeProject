@@ -1,25 +1,56 @@
-### Activity 6: Incorporating Sounds
-### Time: 60 min
-### 🎯 Learning Intention:
-Our goal is to add sound effects to our game.
-### 👍Success Criteria:
-*   I can load a sound file into my program.
-*   I can play a sound effect when the player shoots a bullet.
-*   I can play a different sound effect when a bullet hits the alien.
-### 💡 New Concepts We'll Learn:
-*   **The Pygame Mixer:** A special part of the Pygame library designed for loading and playing sounds and music.
-*   **Loading Assets:** Bringing external files, like sounds or images, into our game.
-### 🤔 What is the Pygame Mixer?
-The Pygame Mixer is like the sound system for our game. Just like we had to `pygame.init()` to start the main library, we also need to initialize the mixer. Once it's running, we can use it to load sound files (like `.wav` or `.mp3` files) from our computer and store them in variables. Then, whenever we want to play a sound, we just tell the variable to `.play()`.
-### 🤔 What are Assets?
-Assets are all the extra files that make a game come to life: images for the player and enemies, sound effects for actions, and background music. These are created outside of the code and then loaded into the game. For this lesson, you will need to find or create two sound files: one for shooting (`laser.wav`) and one for an explosion (`explosion.wav`). **Important:** These files must be in the same folder as your Python script for the code to find them!
-### 🎮 How We'll Use It in Our Game:
-*   **The Pygame Mixer:** We will use `pygame.mixer.init()` at the start of our program. Then, we'll load our sound files using `pygame.mixer.Sound()`.
-*   **Loading Assets:** We will create two new variables, `shoot_sound` and `explosion_sound`, to hold our loaded sound files.
-*   **Playing Sounds:** When the player presses the spacebar, right after we create a bullet, we will add the line `shoot_sound.play()`. When we detect a collision between a bullet and the alien, we will add `explosion_sound.play()`.
-### ✍️ Let's Code: Step-by-Step
-```python
-import pygame
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 6: Incorporating Sounds</title>
+    <link rel="stylesheet" href="../lesson_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', (event) => { document.querySelectorAll('pre code').forEach((el) => { hljs.highlightElement(el); }); });</script>
+</head>
+<body>
+    <div class="container">
+        <h1>Activity 6: Incorporating Sounds</h1>
+        <h3>Time: 60 min</h3>
+        <div class="lesson-section">
+            <h3>🎯 Learning Intention:</h3>
+            <p>Our goal is to add sound effects to our game.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>👍Success Criteria:</h3>
+            <ul>
+                <li>I can load a sound file into my program.</li>
+                <li>I can play a sound effect when the player shoots a bullet.</li>
+                <li>I can play a different sound effect when a bullet hits the alien.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li><strong>The Pygame Mixer:</strong> A special part of the Pygame library designed for loading and playing sounds and music.</li>
+                <li><strong>Loading Assets:</strong> Bringing external files, like sounds or images, into our game.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What is the Pygame Mixer?</h3>
+            <p>The Pygame Mixer is like the sound system for our game. Just like we had to <code>pygame.init()</code> to start the main library, we also need to initialize the mixer. Once it's running, we can use it to load sound files (like <code>.wav</code> or <code>.mp3</code> files) from our computer and store them in variables. Then, whenever we want to play a sound, we just tell the variable to <code>.play()</code>.</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🤔 What are Assets?</h3>
+            <p>Assets are all the extra files that make a game come to life: images for the player and enemies, sound effects for actions, and background music. These are created outside of the code and then loaded into the game. For this lesson, you will need to find or create two sound files: one for shooting (<code>laser.wav</code>) and one for an explosion (<code>explosion.wav</code>). <strong>Important:</strong> These files must be in the same folder as your Python script for the code to find them!</p>
+        </div>
+        <div class="lesson-section">
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <ul>
+                <li><strong>The Pygame Mixer:</strong> We will use <code>pygame.mixer.init()</code> at the start of our program. Then, we'll load our sound files using <code>pygame.mixer.Sound()</code>.</li>
+                <li><strong>Loading Assets:</strong> We will create two new variables, <code>shoot_sound</code> and <code>explosion_sound</code>, to hold our loaded sound files.</li>
+                <li><strong>Playing Sounds:</strong> When the player presses the spacebar, right after we create a bullet, we will add the line <code>shoot_sound.play()</code>. When we detect a collision between a bullet and the alien, we will add <code>explosion_sound.play()</code>.</li>
+            </ul>
+        </div>
+        <div class="lesson-section">
+            <h3>✍️ Let's Code: Step-by-Step</h3>
+            <pre><code class="language-python">import pygame
 # NEW: We need the 'random' library to respawn the alien.
 import random
 
@@ -104,10 +135,11 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ✅ Full Code for This Activity:
-```python
-import pygame
+</code></pre>
+        </div>
+        <div class="lesson-section">
+            <h3>✅ Full Code for This Activity:</h3>
+            <pre><code class="language-python">import pygame
 import random
 
 # Initialize mixer and pygame
@@ -215,6 +247,12 @@ while running:
     pygame.display.update()
 
 pygame.quit()
-```
-### ⭐ Challenge Task:
-Can you add background music? Find a longer music file (like an `.mp3`) and load it using `pygame.mixer.music.load('music.mp3')`. Then, use `pygame.mixer.music.play(-1)` before the game loop starts to play it on a loop. The `-1` tells it to loop forever. You can also adjust the volume of the sound effects using `shoot_sound.set_volume(0.5)` to make them quieter (0.0 is silent, 1.0 is full volume).
+</code></pre>
+        </div>
+        <div class="challenge">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you add background music? Find a longer music file (like an <code>.mp3</code>) and load it using <code>pygame.mixer.music.load('music.mp3')</code>. Then, use <code>pygame.mixer.music.play(-1)</code> before the game loop starts to play it on a loop. The <code>-1</code> tells it to loop forever. You can also adjust the volume of the sound effects using <code>shoot_sound.set_volume(0.5)</code> to make them quieter (0.0 is silent, 1.0 is full volume).</p>
+        </div>
+    </div>
+</body>
+</html>

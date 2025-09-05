@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 3: Listening for Events</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .drag-drop-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .drag-options, .drop-targets {
+            width: 45%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .drag-option {
+            background-color: #667eea;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: grab;
+        }
+        .drop-target {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            min-height: 40px;
+            border: 2px dashed #aaa;
+        }
+        .drop-target.over {
+            background-color: #c7d2fe;
+        }
+        .drop-target.correct {
+            border-color: green;
+            background-color: #d1fecf;
+        }
+        .drop-target.incorrect {
+            border-color: red;
+            background-color: #fecfcf;
+        }
+        .drop-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 3: Listening for Events</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make our game listen for keyboard presses and print them to the console.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>The Event Loop (in more detail)</li>
+                <li>Event Types (<code>pygame.KEYDOWN</code>, <code>pygame.KEYUP</code>)</li>
+                <li>Printing to the console for debugging</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is an Event?</h3>
+            <p>An event is anything that happens in your game window that the program can react to. This includes moving the mouse, clicking a mouse button, pressing a key on the keyboard, or even trying to close the window.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Imagine you are a receptionist at a very busy office. People are constantly coming to your desk (events). Your job is to look at each person (event) one by one and decide what to do. If it's the mail carrier, you take the mail. If it's a visitor, you ask them to sign in. Our <code>for event in pygame.event.get():</code> loop is our digital receptionist, checking every event that happens.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>Events are crucial for making our game interactive. We'll check for <code>KEYDOWN</code> events to know when the player wants to move the ship left or right, or fire a bullet. We already use the <code>QUIT</code> event to close the game.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Match the Event!</h3>
+            <p>Drag the event name from the left and drop it onto the correct description on the right.</p>
+            <div class="drag-drop-container">
+                <div class="drag-options">
+                    <div id="drag-quit" class="drag-option" draggable="true">pygame.QUIT</div>
+                    <div id="drag-keydown" class="drag-option" draggable="true">pygame.KEYDOWN</div>
+                    <div id="drag-keyup" class="drag-option" draggable="true">pygame.KEYUP</div>
+                </div>
+                <div class="drop-targets">
+                    <div>
+                        <div class="drop-label">The user presses a key down:</div>
+                        <div id="drop-keydown" class="drop-target" data-match="drag-keydown"></div>
+                    </div>
+                    <div>
+                        <div class="drop-label">The user releases a key:</div>
+                        <div id="drop-keyup" class="drop-target" data-match="drag-keyup"></div>
+                    </div>
+                    <div>
+                        <div class="drop-label">The user clicks the 'X' on the window:</div>
+                        <div id="drop-quit" class="drop-target" data-match="drag-quit"></div>
+                    </div>
+                </div>
+            </div>
+             <button onclick="checkDragDrop()">Check My Answers</button>
+             <p id="drag-drop-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: The Event Loop</h4>
+        <p>We already have our event loop from the first lesson. It's the <code>for event in pygame.event.get():</code> part. This loop checks every single event that Pygame has detected since the last time we checked.</p>
+        <pre><code># Inside the 'while running:' loop
+for event in pygame.event.get():
+    # ... our checks will go here
+    pass</code></pre>
+
+        <h4>Step 2: Check for Key Presses</h4>
+        <p>Inside the event loop, we can add another check. We already check if <code>event.type == pygame.QUIT</code>. Now, let's also check if <code>event.type == pygame.KEYDOWN</code>. This will be true whenever any key on the keyboard is pressed down.</p>
+        <pre><code>if event.type == pygame.KEYDOWN:
+    print("A key was pressed!")</code></pre>
+        <p>When you run the code and press a key, you'll see the message "A key was pressed!" appear in the terminal window of VS Code. This is a great way to "debug" or check what your program is doing behind the scenes.</p>
+
+        <h4>Step 3: Find Out Which Key Was Pressed</h4>
+        <p>Just knowing a key was pressed isn't enough. We need to know *which* key. The event itself holds this information in <code>event.key</code>. Let's print that out to see what it looks like.</p>
+        <pre><code>if event.type == pygame.KEYDOWN:
+    print(f"Key pressed: {event.key}")</code></pre>
+        <p>Now when you run the code, you'll see a number printed in the terminal for each key press. These numbers are like secret codes for each key. We'll learn how to use them in the next lesson!</p>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Add the new code to your <code>game_activity_03.py</code> file. The only new part is inside the event loop.</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 3")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+
+running = True
+while running:
+    # --- MODIFIED: Event Handling ---
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+        # NEW: Check for key presses
+        if event.type == pygame.KEYDOWN:
+            print(f"A key was pressed! Key code: {event.key}")
+
+    # Drawing
+    screen.fill(BLACK)
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you also detect when a key is released? The event for that is <code>pygame.KEYUP</code>. Try adding another <code>if</code> statement to check for it and print a different message, like "A key was released!".</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        // Drag and Drop Logic
+        const dragOptions = document.querySelectorAll('.drag-option');
+        const dropTargets = document.querySelectorAll('.drop-target');
+        let draggedItem = null;
+
+        dragOptions.forEach(option => {
+            option.addEventListener('dragstart', (e) => {
+                draggedItem = e.target;
+                setTimeout(() => e.target.style.display = 'none', 0);
+            });
+            option.addEventListener('dragend', (e) => {
+                setTimeout(() => {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+
+        dropTargets.forEach(target => {
+            target.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                target.classList.add('over');
+            });
+            target.addEventListener('dragleave', () => {
+                target.classList.remove('over');
+            });
+            target.addEventListener('drop', (e) => {
+                e.preventDefault();
+                target.classList.remove('over');
+                if (target.children.length === 0) {
+                    target.appendChild(draggedItem);
+                }
+            });
+        });
+
+        function checkDragDrop() {
+            let allCorrect = true;
+            dropTargets.forEach(target => {
+                const droppedItem = target.querySelector('.drag-option');
+                target.classList.remove('correct', 'incorrect');
+                if (droppedItem) {
+                    if (target.dataset.match === droppedItem.id) {
+                        target.classList.add('correct');
+                    } else {
+                        target.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                } else {
+                    allCorrect = false;
+                }
+            });
+            const result = document.getElementById('drag-drop-result');
+            if(allCorrect) {
+                result.textContent = "Perfect! You matched them all correctly!";
+                result.style.color = 'green';
+            } else {
+                result.textContent = "Not quite! Some matches are incorrect. Try again.";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 2: Variables, Coordinates, and Drawing</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .interactive-simulator {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .color-sliders {
+            flex-grow: 1;
+        }
+        .color-preview {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 2: Variables, Coordinates, and Drawing</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To learn how to store information in variables and draw our first shape on the screen.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Variables</li>
+                <li>Data Types (Integers, Strings)</li>
+                <li>RGB Colour Codes</li>
+                <li>The Screen Coordinate System</li>
+                <li>Drawing Shapes with Pygame</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a Variable?</h3>
+            <p>A variable is like a labeled box where you can store information. You give the box a name (the variable name) and put something inside it (the value). You can look inside the box later, or even change what's inside it.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Imagine you have a box labeled "PlayerScore". You open it and put the number 0 inside. Later in the game, when the player scores points, you can open the box and replace 0 with 100. The label on the box never changes, but the contents can!</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We'll use variables to store all sorts of things: the player's position on the screen, the colour of the alien, the current score, and how many lives are left. Today, we'll create variables to hold colour values and the player's coordinates.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Interactive Colour Mixer</h3>
+            <p>Computers create colours by mixing Red, Green, and Blue (RGB). Each one can have a value from 0 to 255. Use the sliders to see how the values change the final colour.</p>
+            <div class="interactive-simulator">
+                <div class="color-sliders">
+                    <label for="red">Red: <span id="red-value">102</span></label>
+                    <input type="range" id="red" min="0" max="255" value="102" oninput="updateColor()">
+                    
+                    <label for="green">Green: <span id="green-value">126</span></label>
+                    <input type="range" id="green" min="0" max="255" value="126" oninput="updateColor()">
+                    
+                    <label for="blue">Blue: <span id="blue-value">234</span></label>
+                    <input type="range" id="blue" min="0" max="255" value="234" oninput="updateColor()">
+                </div>
+                <div id="color-preview" class="color-preview" style="background-color: rgb(102, 126, 234);"></div>
+            </div>
+            <p style="text-align: center; margin-top: 10px; font-weight: bold;">RGB(<span id="rgb-code">102, 126, 234</span>)</p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Define Colour Variables</h4>
+        <p>Before our game loop starts, let's create some variables to hold the RGB colour codes we'll use. This makes our code much easier to read. An RGB colour is a "tuple" - a list of numbers in parentheses.</p>
+        <pre><code># Colours
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+PLAYER_COLOR = (66, 135, 245)</code></pre>
+
+        <h4>Step 2: Define Player Variables</h4>
+        <p>We also need variables to control our player's size and position. The screen's coordinate system starts with (0, 0) in the TOP-LEFT corner. The 'x' value increases as you go right, and the 'y' value increases as you go down.</p>
+        <pre><code># Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10</code></pre>
+
+        <h4>Step 3: Fill the Background</h4>
+        <p>Inside the game loop, the first thing we should do is draw the background. This covers up everything from the previous frame. We use <code>screen.fill()</code> and give it the colour we want.</p>
+        <pre><code># Inside the 'while running:' loop
+screen.fill(BLACK)</code></pre>
+
+        <h4>Step 4: Draw the Player</h4>
+        <p>Now, let's draw the player! We'll use <code>pygame.draw.rect()</code>. This function needs to know: where to draw (the <code>screen</code>), what colour to use (<code>PLAYER_COLOR</code>), and the position and size of the rectangle. We package the position (x, y) and size (width, height) into a <code>pygame.Rect</code> object.</p>
+        <pre><code># Inside the loop, after filling the screen
+player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+pygame.draw.rect(screen, PLAYER_COLOR, player_rect)</code></pre>
+
+        <h4>Step 5: Update the Display</h4>
+        <p>All our drawing so far has happened on a hidden, off-screen canvas. To make it visible, we need one final command at the end of our game loop: <code>pygame.display.flip()</code>. This "flips" the hidden canvas onto the main display, showing all our new drawings.</p>
+        <pre><code># At the very end of the 'while running:' loop
+pygame.display.flip()</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code. Notice how it builds on last lesson's code. Copy this into your <code>game_activity_02.py</code> file.</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 2")
+
+# --- NEW: Define Variables ---
+# Colours (R, G, B)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+PLAYER_COLOR = (66, 135, 245) # A nice blue
+
+# Player properties
+player_width = 50
+player_height = 50
+# Start the player in the bottom-middle of the screen
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10 # 10 pixels from the bottom
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # --- NEW: Drawing ---
+    # 1. Fill the background
+    screen.fill(BLACK)
+
+    # 2. Draw the player rectangle
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    # 3. Update the display to show new drawings
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you change the player's colour? Try creating a new colour variable (e.g., <code>PLAYER_GREEN = (0, 255, 0)</code>) and use that when drawing the player rectangle. Can you also change the player's starting position to be in the top-left corner?</p>
+        </div>
+        
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        function updateColor() {
+            const red = document.getElementById('red').value;
+            const green = document.getElementById('green').value;
+            const blue = document.getElementById('blue').value;
+
+            document.getElementById('red-value').textContent = red;
+            document.getElementById('green-value').textContent = green;
+            document.getElementById('blue-value').textContent = blue;
+
+            document.getElementById('color-preview').style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+            document.getElementById('rgb-code').textContent = `${red}, ${green}, ${blue}`;
+        }
+    </script>
+</body>
+</html>

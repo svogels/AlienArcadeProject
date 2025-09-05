@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 10: Functions (def) and Displaying Text</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .drag-drop-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .drag-options, .drop-targets {
+            width: 45%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .drag-option {
+            background-color: #667eea;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: grab;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .drop-target {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            min-height: 40px;
+            border: 2px dashed #aaa;
+        }
+        .drop-target.over { background-color: #c7d2fe; }
+        .drop-target.correct { border-color: green; background-color: #d1fecf; }
+        .drop-target.incorrect { border-color: red; background-color: #fecfcf; }
+        .drop-label { font-weight: bold; margin-bottom: 5px; font-family: 'Courier New', Courier, monospace;}
+        button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #5a6fd8; }
+        .interactive-result { margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 10: Functions (def) and Displaying Text</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To organize our code into logical blocks called functions and display the score on the game screen.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Defining functions with <code>def</code></li>
+                <li>Calling functions</li>
+                <li>Passing arguments to functions</li>
+                <li>Rendering fonts and displaying text</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a Function?</h3>
+            <p>A function is a reusable block of code that performs a specific task. You give it a name, write the code inside it once, and then you can "call" that name whenever you want to run that code, as many times as you want. This helps keep your code organized and avoids repetition.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Think of a function like a recipe. You write down the instructions for "Bake a Cake" once. Then, whenever you want a cake, you just follow the recipe (call the function). You don't have to reinvent the process every time. Some recipes even have options, like "add chocolate chips" - these are like arguments you pass to the function.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>Our main game loop is getting crowded! We'll clean it up by creating functions for specific jobs, like <code>draw_elements()</code>, <code>handle_bullet_movement()</code>, and <code>handle_player_input()</code>. This makes the main loop very simple and easy to understand. We'll also create a function to handle the complex task of drawing text on the screen.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Match the Function!</h3>
+            <p>Drag the function call from the left and drop it onto the correct function definition on the right.</p>
+            <div class="drag-drop-container">
+                <div class="drag-options">
+                    <div id="drag-greet" class="drag-option" draggable="true">greet("Bob")</div>
+                    <div id="drag-add" class="drag-option" draggable="true">add(5, 3)</div>
+                    <div id="drag-play" class="drag-option" draggable="true">play_sound()</div>
+                </div>
+                <div class="drop-targets">
+                    <div>
+                        <div class="drop-label">def add(x, y):</div>
+                        <div id="drop-add" class="drop-target" data-match="drag-add"></div>
+                    </div>
+                    <div>
+                        <div class="drop-label">def play_sound():</div>
+                        <div id="drop-play" class="drop-target" data-match="drag-play"></div>
+                    </div>
+                    <div>
+                        <div class="drop-label">def greet(name):</div>
+                        <div id="drop-greet" class="drop-target" data-match="drag-greet"></div>
+                    </div>
+                </div>
+            </div>
+             <button onclick="checkDragDrop()">Check My Answers</button>
+             <p id="drag-drop-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Set up the Font</h4>
+        <p>First, we need to tell Pygame which font we want to use to write our text. We create a font object. We can use a default font by passing <code>None</code> and a size.</p>
+        <pre><code># At the top with other variables
+font = pygame.font.Font(None, 36) # Use default font, size 36</code></pre>
+
+        <h4>Step 2: Create a Function to Draw Text</h4>
+        <p>Drawing text in Pygame has two steps: "rendering" the text into an image, and then "blitting" (copying) that image onto the screen. Let's wrap this in a handy function. This function will take the text to display, the font, the colour, and the position as arguments.</p>
+        <pre><code># Define this function before the main game loop
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect()
+    text_rect.topleft = (x, y)
+    surface.blit(text_obj, text_rect)</code></pre>
+
+        <h4>Step 3: Call the Function to Draw the Score</h4>
+        <p>Now, inside our game loop (in the drawing section), we can call our new function to display the score. We need to convert our `score` variable (an integer) into a string first.</p>
+        <pre><code># In the drawing section of the main loop
+draw_text(f"Score: {score}", font, WHITE, screen, 10, 10)</code></pre>
+
+        <h4>Step 4: Refactor Drawing Code into a Function</h4>
+        <p>Let's tidy up! We can move all our `pygame.draw.rect` calls into their own function. This makes the main loop much cleaner.</p>
+        <pre><code>def draw_elements():
+    screen.fill(BLACK)
+    # Draw all game elements
+    # ... (all the draw calls will go here) ...
+    draw_text(f"Score: {score}", font, WHITE, screen, 10, 10)
+    pygame.display.flip()</code></pre>
+        <p>Now, the drawing section of your main loop is just one line: <code>draw_elements()</code>.</p>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>This is a big reorganization! Compare this to last lesson's code to see how functions make everything neater.</p>
+        <pre><code>import pygame
+import random
+
+# -- Setup --
+pygame.init()
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 10")
+
+# -- Colours and Fonts --
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68)
+BULLET_COLOR = (255, 255, 0)
+font = pygame.font.Font(None, 36) # --- NEW
+
+# -- Game State Variables --
+score = 0
+player_x = (screen_width - 50) / 2
+player_y = screen_height - 50 - 10
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+bullets = []
+
+# -- Constants --
+PLAYER_WIDTH, PLAYER_HEIGHT = 50, 50
+ALIEN_WIDTH, ALIEN_HEIGHT = 40, 40
+BULLET_WIDTH, BULLET_HEIGHT = 5, 10
+PLAYER_SPEED = 5
+BULLET_SPEED = 10
+
+# --- NEW: Functions ---
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect()
+    text_rect.topleft = (x, y)
+    surface.blit(text_obj, text_rect)
+
+def draw_elements(player_rect, alien_rect, bullets):
+    screen.fill(BLACK)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+    for bullet in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, bullet)
+    draw_text(f"Score: {score}", font, WHITE, screen, 10, 10)
+    pygame.display.flip()
+
+# -- Main Game Loop --
+running = True
+while running:
+    # -- Event Handling --
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                bullet_x = player_x + (PLAYER_WIDTH / 2) - (BULLET_WIDTH / 2)
+                bullet_y = player_y
+                new_bullet = pygame.Rect(bullet_x, bullet_y, BULLET_WIDTH, BULLET_HEIGHT)
+                bullets.append(new_bullet)
+
+    # -- Player Movement --
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_x > 0:
+        player_x -= PLAYER_SPEED
+    if keys[pygame.K_RIGHT] and player_x < screen_width - PLAYER_WIDTH:
+        player_x += PLAYER_SPEED
+
+    # -- Game Logic --
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - ALIEN_WIDTH:
+        alien_speed *= -1
+
+    player_rect = pygame.Rect(player_x, player_y, PLAYER_WIDTH, PLAYER_HEIGHT)
+    alien_rect = pygame.Rect(alien_x, alien_y, ALIEN_WIDTH, ALIEN_HEIGHT)
+
+    for bullet in bullets[:]:
+        bullet.y -= BULLET_SPEED
+        if bullet.colliderect(alien_rect):
+            score += 10
+            bullets.remove(bullet)
+            alien_x = random.randint(0, screen_width - ALIEN_WIDTH)
+        elif bullet.bottom < 0:
+            bullets.remove(bullet)
+
+    # -- Drawing --
+    draw_elements(player_rect, alien_rect, bullets)
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you create a new function called <code>handle_alien_movement()</code> that contains all the logic for moving the alien and making it bounce? Then, call this function from your main loop. This will make your main loop even cleaner!</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        // Drag and Drop Logic
+        const sourceContainer = document.querySelector('.drag-options');
+        const targetContainers = document.querySelectorAll('.drop-targets');
+        
+        new Sortable(sourceContainer, { group: 'shared', animation: 150 });
+        targetContainers.forEach(c => new Sortable(c, { group: 'shared', animation: 150 }));
+
+        function checkDragDrop() {
+            let allCorrect = true;
+            document.querySelectorAll('.drop-target').forEach(target => {
+                const droppedItem = target.querySelector('.drag-option');
+                target.classList.remove('correct', 'incorrect');
+                if (droppedItem) {
+                    if (target.dataset.match === droppedItem.id) {
+                        target.classList.add('correct');
+                    } else {
+                        target.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                } else {
+                    allCorrect = false; // Missing a drop
+                }
+            });
+            const result = document.getElementById('drag-drop-result');
+            if(allCorrect) {
+                result.textContent = "Perfect! You know how to call functions.";
+                result.style.color = 'green';
+            } else {
+                result.textContent = "Not quite! Some calls don't match the definitions. Try again.";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

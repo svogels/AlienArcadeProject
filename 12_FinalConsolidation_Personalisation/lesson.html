@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 12: Final Consolidation & Personalisation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .challenge-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .challenge-list li {
+            background: white;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .challenge-list h4 {
+            margin-top: 0;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 12: Final Consolidation & Personalisation</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make the game your own by adding personal touches and creative features!</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 You're the Developer Now!</h3>
+            <p>Congratulations on building a complete game! This final lesson is another "workshop" where you get to be the lead developer. There are no new core concepts. The goal is to take everything you've learned and use it to add your own unique ideas to the game. Your <code>game_activity_12.py</code> file contains the complete, working code from the last lesson. Use it as your playground!</p>
+        </div>
+
+        <div class="info-box challenge-list">
+            <h3>🚀 Personalisation Checklist</h3>
+            <p>Here are some ideas to get you started. Try to implement at least a few, or come up with your own!</p>
+            <ul>
+                <li>
+                    <h4>Challenge 1: Add a Background Image</h4>
+                    <p>Find a cool space background image online. Save it in your project folder. Use <code>pygame.image.load()</code> to load it and <code>screen.blit()</code> to draw it at the start of your drawing section (instead of <code>screen.fill(BLACK)</code>).</p>
+                </li>
+                <li>
+                    <h4>Challenge 2: Implement a High Score</h4>
+                    <p>Create a `high_score` variable. When the game is over, check if the `score` is greater than the `high_score`. If it is, update the `high_score`. Display the high score on the Game Over screen.</p>
+                </li>
+                <li>
+                    <h4>Challenge 3: Player Lives</h4>
+                    <p>Instead of a timer, give the player 3 lives. Create a `lives` variable. Make the alien reset at the top of the screen when it goes off the bottom. If the alien touches the player, decrease `lives` by one and reset the alien. The game is over when `lives` reaches 0.</p>
+                </li>
+                <li>
+                    <h4>Challenge 4: Multiple Aliens</h4>
+                    <p>This is a big one! Can you change your single `alien_rect` into a list of `aliens`, just like you did for bullets? You would need to create a few aliens at the start, and then loop through all of them for movement and collision detection.</p>
+                </li>
+                 <li>
+                    <h4>Challenge 5: Custom Sprites</h4>
+                    <p>Instead of drawing rectangles, use <code>pygame.image.load()</code> to load images for your player and alien. Draw them using <code>screen.blit(image, rect)</code> instead of <code>pygame.draw.rect()</code>. This will make your game look much more professional!</p>
+                </li>
+                 <li>
+                    <h4>Challenge 6: A "Press Start" Screen</h4>
+                    <p>Add another game state! Create a `game_started = False` flag. At the beginning, only show a title and a "Press Enter to Start" message. When the player presses Enter, set `game_started = True` and begin the main game logic.</p>
+                </li>
+            </ul>
+        </div>
+
+        <h3>✅ Your Final Code Base:</h3>
+        <p>Your <code>game_activity_12.py</code> file contains the complete code from lesson 11. This is your starting point. Good luck, and have fun!</p>
+        <pre><code>import pygame
+import random
+
+# (Assume you have 'laser.wav' and 'explosion.wav' in the same folder)
+
+pygame.init()
+pygame.mixer.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Final")
+
+# -- Sounds --
+try:
+    laser_sound = pygame.mixer.Sound("laser.wav")
+    explosion_sound = pygame.mixer.Sound("explosion.wav")
+except pygame.error:
+    print("Warning: Sound files not found.")
+    laser_sound = None
+    explosion_sound = None
+
+# -- Colours and Fonts --
+BLACK, WHITE = (0, 0, 0), (255, 255, 255)
+PLAYER_COLOR, ALIEN_COLOR, BULLET_COLOR = (66, 135, 245), (239, 68, 68), (255, 255, 0)
+font = pygame.font.Font(None, 36)
+large_font = pygame.font.Font(None, 72)
+
+# -- Game State --
+score = 0
+game_over = False
+start_time = pygame.time.get_ticks()
+GAME_DURATION = 30000
+
+# -- Entity Properties --
+player_rect = pygame.Rect((screen_width - 50) / 2, screen_height - 60, 50, 50)
+alien_rect = pygame.Rect(100, 50, 40, 40)
+alien_speed = 3
+bullets = []
+PLAYER_SPEED, BULLET_SPEED = 5, 10
+
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect(center=(x, y))
+    surface.blit(text_obj, text_rect)
+
+# -- Main Game Loop --
+running = True
+while running:
+    time_elapsed = pygame.time.get_ticks() - start_time
+    time_remaining = max(0, (GAME_DURATION - time_elapsed) // 1000)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN and not game_over:
+            if event.key == pygame.K_SPACE:
+                bullet = pygame.Rect(player_rect.centerx - 2, player_rect.top, 5, 10)
+                bullets.append(bullet)
+                if laser_sound: laser_sound.play()
+
+    if not game_over:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and player_rect.left > 0:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT] and player_rect.right < screen_width:
+            player_rect.x += PLAYER_SPEED
+
+        alien_rect.x += alien_speed
+        if alien_rect.left <= 0 or alien_rect.right >= screen_width:
+            alien_speed *= -1
+
+        for bullet in bullets[:]:
+            bullet.y -= BULLET_SPEED
+            if bullet.colliderect(alien_rect):
+                score += 10
+                bullets.remove(bullet)
+                alien_rect.x = random.randint(0, screen_width - alien_rect.width)
+                if explosion_sound: explosion_sound.play()
+            elif bullet.bottom < 0:
+                bullets.remove(bullet)
+        
+        if time_remaining == 0:
+            game_over = True
+
+    screen.fill(BLACK)
+    if game_over:
+        draw_text("Game Over", large_font, WHITE, screen, screen_width / 2, screen_height / 2 - 50)
+        draw_text(f"Final Score: {score}", font, WHITE, screen, screen_width / 2, screen_height / 2 + 20)
+    else:
+        pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+        pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+        for bullet in bullets:
+            pygame.draw.rect(screen, BULLET_COLOR, bullet)
+        draw_text(f"Score: {score}", font, WHITE, screen, 60, 30)
+        draw_text(f"Time: {time_remaining}", font, WHITE, screen, screen_width - 80, 30)
+
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>You've completed the course! How confident do you feel in your new Python and Pygame skills?</p>
+            <input type="range" min="1" max="5" value="4" style="width: 100%;">
+        </div>
+    </div>
+</body>
+</html>

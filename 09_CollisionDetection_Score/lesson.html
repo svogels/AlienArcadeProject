@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 9: Collision Detection and Score</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .quiz-code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .quiz-line {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        .quiz-line:hover {
+            background-color: #4a5568;
+        }
+        .quiz-line.correct {
+            background-color: #48bb78;
+        }
+        .quiz-line.incorrect {
+            background-color: #f56565;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 9: Collision Detection and Score</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make the alien disappear and our score go up when it gets hit by a bullet.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Collision Detection with <code>Rect.colliderect()</code></li>
+                <li>Boolean values (<code>True</code> and <code>False</code>)</li>
+                <li>Keeping score</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is Collision Detection?</h3>
+            <p>Collision detection is just a fancy way of asking, "Are these two things touching?" In Pygame, since all our objects are rectangles, we can easily ask if two rectangles are overlapping at all. The computer will give us a simple "yes" or "no" answer.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Imagine two big, flat cardboard boxes on the floor. You can tell if they are overlapping. The <code>colliderect()</code> method is like your eyes checking for that overlap. It doesn't tell you *how much* they overlap, just *if* they do. The answer it gives is a "Boolean" value.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>In our bullet movement loop, for every single bullet, we will ask: "Is this bullet's rectangle colliding with the alien's rectangle?" If the answer is <code>True</code>, we'll know we have a hit! We can then remove the bullet, add to our score, and move the alien.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Spot the Error!</h3>
+            <p>The code below is supposed to check if `player_rect` is colliding with `enemy_rect`. Click on the line that contains a logical error.</p>
+            <div class="quiz-code-block" id="quiz-block">
+                <div class="quiz-line" onclick="checkLine(this, false)">if player_rect.colliderect(enemy_rect) = True:</div>
+                <div class="quiz-line" onclick="checkLine(this, true)">if player_rect.colliderect(enemy_rect) == True:</div>
+                <div class="quiz-line" onclick="checkLine(this, false)">if player_rect.collide(enemy_rect):</div>
+            </div>
+            <p id="quiz-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Add a Score Variable</h4>
+        <p>At the top of our script with the other variables, we need a new one to keep track of the player's score. It should start at 0.</p>
+        <pre><code>score = 0</code></pre>
+
+        <h4>Step 2: Check for Collisions</h4>
+        <p>This is the key part. Inside the <code>for bullet in bullets:</code> loop, we will add an <code>if</code> statement. We'll use the <code>colliderect()</code> method on the bullet's rectangle, and pass it the alien's rectangle to check against. It will return <code>True</code> if they are touching.</p>
+        <pre><code># Inside the 'for bullet in bullets:' loop
+# First, we need to make sure we have the alien's rect updated
+alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+
+# Now, check for collision
+if bullet.colliderect(alien_rect):
+    # A hit!
+    print("HIT!")</code></pre>
+
+        <h4>Step 3: Handle the Hit</h4>
+        <p>When a hit happens, we need to do three things:
+        <ol>
+            <li>Increase the score.</li>
+            <li>Remove the bullet that hit the alien.</li>
+            <li>Reset the alien's position so it looks like a new one appeared.</li>
+        </ol>
+        We'll also need to import Python's `random` library to help us reset the alien.</p>
+        <pre><code># Add this at the very top of your file
+import random
+
+# ... inside the collision 'if' statement
+score += 10 # Add 10 points to the score
+bullets.remove(bullet) # Remove the bullet
+alien_x = random.randint(0, screen_width - alien_width) # Move alien to a random X spot
+print(f"New Score: {score}")</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code for <code>game_activity_09.py</code>. The main changes are the new collision logic inside the bullet loop.</p>
+        <pre><code>import pygame
+import random # --- NEW
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 9")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68)
+BULLET_COLOR = (255, 255, 0)
+
+# --- NEW: Game Variables ---
+score = 0
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5
+
+# Alien properties
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+
+# Bullet properties
+bullet_width = 5
+bullet_height = 10
+bullet_speed = 10
+bullets = []
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+            elif event.key == pygame.K_SPACE:
+                bullet_x = player_x + (player_width / 2) - (bullet_width / 2)
+                bullet_y = player_y
+                new_bullet = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
+                bullets.append(new_bullet)
+
+    # Alien Movement
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - alien_width:
+        alien_speed *= -1
+
+    # --- MODIFIED: Bullet and Collision Logic ---
+    alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height) # Update alien rect each frame
+    
+    for bullet in bullets[:]: # Loop through a copy
+        bullet.y -= bullet_speed
+        
+        # Check for collision
+        if bullet.colliderect(alien_rect):
+            score += 10
+            bullets.remove(bullet)
+            alien_x = random.randint(0, screen_width - alien_width)
+            print(f"Score: {score}") # Print score to console for now
+        
+        # Check for bullets going off-screen
+        elif bullet.bottom < 0:
+            bullets.remove(bullet)
+
+    # Drawing
+    screen.fill(BLACK)
+    
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    # We already defined alien_rect above, so we can reuse it
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+
+    for bullet in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, bullet)
+
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you make the alien speed up every time it gets hit? You could have a variable `alien_speed_increase` and add it to the absolute value of `alien_speed` after each collision.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        function checkLine(element, isCorrect) {
+            const lines = document.querySelectorAll('.quiz-line');
+            lines.forEach(line => line.classList.remove('correct', 'incorrect'));
+
+            const result = document.getElementById('quiz-result');
+            if (isCorrect) {
+                element.classList.add('correct');
+                result.textContent = "Correct! `== True` is the right way to compare. A single `=` is for assignment.";
+                result.style.color = 'green';
+            } else {
+                element.classList.add('incorrect');
+                result.textContent = "That's not it. Remember, a single equals sign `=` is for assigning a value, not for comparing two values. Try again!";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

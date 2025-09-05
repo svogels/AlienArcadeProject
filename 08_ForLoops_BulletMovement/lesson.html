@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 8: For Loops and Bullet Movement</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .code-scrambler {
+            display: flex;
+            gap: 20px;
+        }
+        .scramble-source, .scramble-target {
+            width: 50%;
+            min-height: 100px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .scramble-line {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: grab;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #5a6fd8;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 8: For Loops and Bullet Movement</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make our bullets move up the screen after we fire them.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Using a <code>for</code> loop to iterate over a list</li>
+                <li>Modifying object properties inside a loop</li>
+                <li>Removing items from a list</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a 'For' Loop?</h3>
+            <p>A <code>for</code> loop is a way to do something for every single item in a list, one by one. You give it a list and a block of code, and it runs that code once for each item, automatically handing you the item to work with.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Imagine you're a mail carrier with a bag of letters (a list). Your job is to visit every house on a street. The <code>for</code> loop is your set of instructions: "FOR every house on this street, walk up to the door and deliver a letter." You repeat the same action for each house until you run out of houses.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We will use a <code>for</code> loop to go through our <code>bullets</code> list. For each bullet in the list, we will subtract from its 'y' coordinate, making it move up the screen. This happens in every frame, so the bullets will fly smoothly upwards.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Code Scrambler</h3>
+            <p>Drag the lines of code into the correct order to loop through a list of `numbers` and print only the ones greater than 10.</p>
+            <div class="code-scrambler">
+                <div id="scramble-source" class="scramble-source">
+                    <div class="scramble-line" draggable="true">if num > 10:</div>
+                    <div class="scramble-line" draggable="true">print(num)</div>
+                    <div class="scramble-line" draggable="true">for num in numbers:</div>
+                </div>
+                <div id="scramble-target" class="scramble-target"></div>
+            </div>
+            <button onclick="checkScramble()">Check My Code</button>
+            <p id="scramble-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Create the Bullet Movement Loop</h4>
+        <p>In our main game loop (the <code>while running:</code> loop), after the alien movement logic, we need to add a new <code>for</code> loop. This loop will go through every bullet currently in our <code>bullets</code> list.</p>
+        <pre><code># In the main 'while' loop
+# ... after alien movement
+for bullet in bullets:
+    # We will do something to each 'bullet' here</code></pre>
+
+        <h4>Step 2: Update Bullet Position</h4>
+        <p>Inside this new loop, for each <code>bullet</code>, we need to update its vertical position. Since our bullets are <code>pygame.Rect</code> objects, we can access their y-coordinate with <code>bullet.y</code>. To move up, we subtract the <code>bullet_speed</code>.</p>
+        <pre><code>for bullet in bullets:
+    bullet.y -= bullet_speed</code></pre>
+        <p>Because this loop runs for every frame, each bullet's position will be updated continuously, making it look like it's flying.</p>
+        
+        <h4>Step 3: Remove Off-Screen Bullets</h4>
+        <p>If we don't clean up, our `bullets` list will grow forever with bullets that have flown off the top of the screen. This will slow down our game. Inside the loop, we can add an `if` statement to check if a bullet's `y` position is off the screen. If it is, we can remove it from the list.</p>
+        <p>A safe way to remove items from a list you are looping over is to create a new list of only the items you want to keep.</p>
+        <pre><code># Replace the simple for loop with this logic
+bullets_to_keep = []
+for bullet in bullets:
+    bullet.y -= bullet_speed
+    if bullet.y > -bullet_height: # If the bullet is still on screen
+        bullets_to_keep.append(bullet)
+bullets = bullets_to_keep # Replace the old list with the new, filtered list</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code for <code>game_activity_08.py</code>. The main changes are the new loop to handle bullet movement.</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 8")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68)
+BULLET_COLOR = (255, 255, 0)
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5
+
+# Alien properties
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+
+# Bullet properties
+bullet_width = 5
+bullet_height = 10
+bullet_speed = 10
+bullets = []
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+            elif event.key == pygame.K_SPACE:
+                bullet_x = player_x + (player_width / 2) - (bullet_width / 2)
+                bullet_y = player_y
+                new_bullet = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
+                bullets.append(new_bullet)
+
+    # Alien Movement
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - alien_width:
+        alien_speed *= -1
+
+    # --- NEW: Bullet Movement ---
+    # Move each bullet up the screen
+    for bullet in bullets:
+        bullet.y -= bullet_speed
+    
+    # Remove bullets that have gone off-screen
+    # We loop through a copy of the list to safely remove items
+    for bullet in bullets[:]:
+        if bullet.bottom < 0:
+            bullets.remove(bullet)
+
+    # Drawing
+    screen.fill(BLACK)
+    
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+
+    # Draw all bullets
+    for bullet in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, bullet)
+
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you change the <code>bullet_speed</code> to make the bullets super fast? What about really slow? What happens if you make the speed a negative number?</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <script>
+        // Code Scrambler Logic
+        const source = document.getElementById('scramble-source');
+        const target = document.getElementById('scramble-target');
+
+        new Sortable(source, { group: 'shared', animation: 150 });
+        new Sortable(target, { group: 'shared', animation: 150 });
+
+        function checkScramble() {
+            const correctOrder = [
+                "for num in numbers:",
+                "if num > 10:",
+                "print(num)"
+            ];
+            const userOrder = Array.from(target.children).map(child => child.textContent.trim());
+            
+            const result = document.getElementById('scramble-result');
+            if (JSON.stringify(correctOrder) === JSON.stringify(userOrder)) {
+                result.textContent = "Correct! That's how you loop and check.";
+                result.style.color = 'green';
+            } else {
+                result.textContent = "Not quite. The loop or the condition is in the wrong place. Try again!";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 11: Sound, Timer, and Game States</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .quiz-code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .quiz-line {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+        .quiz-line:hover {
+            background-color: #4a5568;
+        }
+        .quiz-line.correct {
+            background-color: #48bb78;
+        }
+        .quiz-line.incorrect {
+            background-color: #f56565;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 11: Sound, Timer, and Game States</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To add sound effects, a game timer, and a "Game Over" screen.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Loading and playing sound effects</li>
+                <li>Using <code>pygame.time</code> to create a countdown timer</li>
+                <li>Boolean flags to manage game states (e.g., playing vs. game over)</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a Game State?</h3>
+            <p>A game state is like a "mode" that your game is in. For example, a game might have a "main menu" state, a "playing" state, and a "game over" state. The game behaves differently depending on which state it's in. We can manage these states using simple "Boolean flags" - variables that are either <code>True</code> or <code>False</code>.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Think of a traffic light. It can be in a "green light" state, a "yellow light" state, or a "red light" state. A simple switch controls which state it's in. Our Boolean flag, like <code>is_game_over = False</code>, is that switch. When something happens (like the timer running out), we flip the switch to <code>True</code>, and the whole flow of the game changes.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We'll create a variable <code>game_over</code>. The main game logic (moving the player, aliens, bullets) will only run IF <code>game_over</code> is <code>False</code>. When the timer reaches zero, we'll set <code>game_over</code> to <code>True</code>. Then, instead of the game logic, we'll show a "Game Over" message on the screen.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Spot the Error!</h3>
+            <p>This code tries to stop the game when `lives` reaches 0, but there's a mistake. Click the line with the error.</p>
+            <div class="quiz-code-block" id="quiz-block">
+                <div class="quiz-line" onclick="checkLine(this, false)">game_over = False</div>
+                <div class="quiz-line" onclick="checkLine(this, false)">if lives < 0:</div>
+                <div class="quiz-line" onclick="checkLine(this, true)">game_over = True</div>
+            </div>
+            <p>The code should set `game_over` to `True` when `lives` is 0 or less.</p>
+            <p id="quiz-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Load Sound Effects</h4>
+        <p>First, you'll need some sound files (e.g., `.wav` or `.ogg`). Place them in your project folder. At the top of your script, after <code>pygame.init()</code>, you need to initialize the sound mixer and then load your sounds into variables.</p>
+        <pre><code># You will need to create/download these sound files
+# laser.wav, explosion.wav
+pygame.mixer.init()
+laser_sound = pygame.mixer.Sound("laser.wav")
+explosion_sound = pygame.mixer.Sound("explosion.wav")</code></pre>
+
+        <h4>Step 2: Play Sounds on Events</h4>
+        <p>Now we can play these sounds! When the player fires a bullet (presses space), we call <code>laser_sound.play()</code>. When a bullet hits an alien, we call <code>explosion_sound.play()</code>.</p>
+        <pre><code># When space is pressed
+laser_sound.play()
+
+# When a collision happens
+explosion_sound.play()</code></pre>
+
+        <h4>Step 3: Create the Timer</h4>
+        <p>We can use Pygame's clock to create a countdown. We'll record the start time of the game. Then, in every loop, we'll check how much time has passed. Let's give the player 30 seconds.</p>
+        <pre><code># Before the main loop
+start_time = pygame.time.get_ticks() # Get time in milliseconds
+game_duration = 30000 # 30 seconds
+
+# Inside the main loop
+time_elapsed = pygame.time.get_ticks() - start_time
+time_remaining = (game_duration - time_elapsed) // 1000
+
+# Draw the time remaining on screen
+draw_text(f"Time: {time_remaining}", font, WHITE, screen, screen_width - 150, 10)</code></pre>
+
+        <h4>Step 4: Implement the Game State</h4>
+        <p>We need a flag to track if the game is over. We'll check if the timer has run out. If it has, we set our flag to <code>True</code>. All our game logic will be wrapped in an <code>if not game_over:</code> block.</p>
+        <pre><code># Before the loop
+game_over = False
+
+# Inside the loop
+if not game_over:
+    # All your player movement, alien movement, and bullet logic goes here...
+    if time_remaining <= 0:
+        game_over = True
+
+# In the drawing section
+if game_over:
+    # Show a "Game Over" message
+    draw_text("Game Over", large_font, WHITE, screen, 250, 250)
+else:
+    # Normal drawing
+    # ...</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>This is the final version of our core game! You will need to provide your own sound files for this to work.</p>
+        <pre><code>import pygame
+import random
+
+# (Assume you have 'laser.wav' and 'explosion.wav' in the same folder)
+
+pygame.init()
+pygame.mixer.init() # --- NEW
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 11")
+
+# -- Sounds --
+try:
+    laser_sound = pygame.mixer.Sound("laser.wav")
+    explosion_sound = pygame.mixer.Sound("explosion.wav")
+except pygame.error:
+    print("Warning: Sound files not found. Game will be silent.")
+    laser_sound = None
+    explosion_sound = None
+
+
+# -- Colours and Fonts --
+BLACK, WHITE = (0, 0, 0), (255, 255, 255)
+PLAYER_COLOR, ALIEN_COLOR, BULLET_COLOR = (66, 135, 245), (239, 68, 68), (255, 255, 0)
+font = pygame.font.Font(None, 36)
+large_font = pygame.font.Font(None, 72)
+
+# -- Game State --
+score = 0
+game_over = False
+start_time = pygame.time.get_ticks()
+GAME_DURATION = 30000 # 30 seconds
+
+# -- Entity Properties --
+player_rect = pygame.Rect((screen_width - 50) / 2, screen_height - 60, 50, 50)
+alien_rect = pygame.Rect(100, 50, 40, 40)
+alien_speed = 3
+bullets = []
+PLAYER_SPEED, BULLET_SPEED = 5, 10
+
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect(center=(x, y))
+    surface.blit(text_obj, text_rect)
+
+# -- Main Game Loop --
+running = True
+while running:
+    time_elapsed = pygame.time.get_ticks() - start_time
+    time_remaining = max(0, (GAME_DURATION - time_elapsed) // 1000)
+
+    # -- Event Handling --
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN and not game_over:
+            if event.key == pygame.K_SPACE:
+                bullet = pygame.Rect(player_rect.centerx - 2, player_rect.top, 5, 10)
+                bullets.append(bullet)
+                if laser_sound: laser_sound.play()
+
+    if not game_over:
+        # -- Player Movement --
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and player_rect.left > 0:
+            player_rect.x -= PLAYER_SPEED
+        if keys[pygame.K_RIGHT] and player_rect.right < screen_width:
+            player_rect.x += PLAYER_SPEED
+
+        # -- Game Logic --
+        alien_rect.x += alien_speed
+        if alien_rect.left <= 0 or alien_rect.right >= screen_width:
+            alien_speed *= -1
+
+        for bullet in bullets[:]:
+            bullet.y -= BULLET_SPEED
+            if bullet.colliderect(alien_rect):
+                score += 10
+                bullets.remove(bullet)
+                alien_rect.x = random.randint(0, screen_width - alien_rect.width)
+                if explosion_sound: explosion_sound.play()
+            elif bullet.bottom < 0:
+                bullets.remove(bullet)
+        
+        if time_remaining == 0:
+            game_over = True
+
+    # -- Drawing --
+    screen.fill(BLACK)
+    if game_over:
+        draw_text("Game Over", large_font, WHITE, screen, screen_width / 2, screen_height / 2 - 50)
+        draw_text(f"Final Score: {score}", font, WHITE, screen, screen_width / 2, screen_height / 2 + 20)
+    else:
+        pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+        pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+        for bullet in bullets:
+            pygame.draw.rect(screen, BULLET_COLOR, bullet)
+        draw_text(f"Score: {score}", font, WHITE, screen, 60, 30)
+        draw_text(f"Time: {time_remaining}", font, WHITE, screen, screen_width - 80, 30)
+
+    pygame.display.flip()
+    pygame.time.Clock().tick(60) # Limit frame rate
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you add a "Restart" feature? When the game is over, listen for the 'R' key. If it's pressed, reset the `score`, `game_over` flag, and the `start_time` to restart the game.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        function checkLine(element, isCorrect) {
+            const lines = document.querySelectorAll('.quiz-line');
+            lines.forEach(line => line.classList.remove('correct', 'incorrect'));
+
+            const result = document.getElementById('quiz-result');
+            if (isCorrect) {
+                element.classList.add('correct');
+                result.textContent = "Correct! You need to set the `game_over` flag to True to change the game's state.";
+                result.style.color = 'green';
+            } else {
+                element.classList.add('incorrect');
+                result.textContent = "Not quite. That line is syntactically correct, but it doesn't contain the logical error. The error is in what happens *inside* the if-statement.";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

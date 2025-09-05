@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 4: Conditionals and Player Movement</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .code-scrambler {
+            display: flex;
+            gap: 20px;
+        }
+        .scramble-source, .scramble-target {
+            width: 50%;
+            min-height: 150px;
+            border: 2px dashed #aaa;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .scramble-line {
+            background-color: #4a5568;
+            color: white;
+            padding: 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            cursor: grab;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #5a6fd8;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 4: Conditionals and Player Movement</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make our player character move left and right when we press the arrow keys.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Conditional Logic (<code>if</code>, <code>elif</code>, <code>else</code>)</li>
+                <li>Comparison Operators (<code>==</code>)</li>
+                <li>Using specific key constants (<code>pygame.K_LEFT</code>, <code>pygame.K_RIGHT</code>)</li>
+                <li>Updating variables to create movement</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a Conditional?</h3>
+            <p>A conditional is a way of asking a "what if?" question in your code. It lets your program make decisions. You can tell the computer: "IF this condition is true, then do this specific action. Otherwise (ELSE), do something different."</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Think of a simple robot that can only follow instructions. You tell it: "IF the light is green, move forward. ELSE IF the light is red, stop." The robot checks the condition (the colour of the light) and then performs the correct action. That's exactly what an <code>if/elif/else</code> block does.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We'll use conditionals to check *which* key the player pressed. IF the key was the left arrow, we'll decrease the player's X coordinate. ELSE IF the key was the right arrow, we'll increase the player's X coordinate. This is how we translate keyboard input into on-screen movement!</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Code Scrambler</h3>
+            <p>Drag the lines of code from the left box and drop them into the right box in the correct order to check a variable `score`.</p>
+            <div class="code-scrambler">
+                <div id="scramble-source" class="scramble-source">
+                    <div class="scramble-line" draggable="true">elif score >= 50:</div>
+                    <div class="scramble-line" draggable="true">print("You won!")</div>
+                    <div class="scramble-line" draggable="true">if score >= 100:</div>
+                    <div class="scramble-line" draggable="true">else:</div>
+                    <div class="scramble-line" draggable="true">print("Keep trying!")</div>
+                    <div class="scramble-line" draggable="true">print("Good job!")</div>
+                </div>
+                <div id="scramble-target" class="scramble-target"></div>
+            </div>
+            <button onclick="checkScramble()">Check My Code</button>
+            <p id="scramble-result" class="interactive-result"></p>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Define Player Speed</h4>
+        <p>First, let's create a new variable at the top of our script to control how fast the player moves. This makes it easy to change the speed later without digging through our code.</p>
+        <pre><code>player_speed = 5</code></pre>
+
+        <h4>Step 2: Check for Specific Keys</h4>
+        <p>Inside our <code>if event.type == pygame.KEYDOWN:</code> block, we can add another layer of <code>if</code> statements to check exactly which key was pressed. Pygame has special names for every key, like <code>pygame.K_LEFT</code> for the left arrow key and <code>pygame.K_RIGHT</code> for the right arrow key.</p>
+        <pre><code># Inside the KEYDOWN check
+if event.key == pygame.K_LEFT:
+    print("Left arrow pressed")
+elif event.key == pygame.K_RIGHT:
+    print("Right arrow pressed")</code></pre>
+        <p>Notice the double equals sign <code>==</code>. This is a "comparison operator". It checks if two things are equal, which is different from a single equals sign <code>=</code> which assigns a value to a variable.</p>
+
+        <h4>Step 3: Update Player Position</h4>
+        <p>Now, instead of just printing a message, let's change the player's position. If the left arrow is pressed, we subtract the <code>player_speed</code> from <code>player_x</code>. If the right arrow is pressed, we add it. This will change the variable that stores our player's horizontal position.</p>
+        <pre><code>if event.key == pygame.K_LEFT:
+    player_x -= player_speed # This is shorthand for player_x = player_x - player_speed
+elif event.key == pygame.K_RIGHT:
+    player_x += player_speed # This is shorthand for player_x = player_x + player_speed</code></pre>
+        <p>Because this code is inside the game loop, the player's rectangle will be redrawn at its new <code>player_x</code> position in the very next frame, creating the illusion of movement!</p>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code for today. The new logic is all inside the event loop. Copy this into <code>game_activity_04.py</code>.</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 4")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5 # --- NEW
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+        # --- NEW: Conditional Logic for Movement ---
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+
+    # Drawing
+    screen.fill(BLACK)
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Right now, the player can move off the screen! Can you add more conditional checks to stop this from happening? Hint: Check if <code>player_x</code> is less than 0 (the left edge) or greater than <code>screen_width - player_width</code> (the right edge).</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        // Code Scrambler Logic
+        const source = document.getElementById('scramble-source');
+        const target = document.getElementById('scramble-target');
+
+        new Sortable(source, {
+            group: 'shared',
+            animation: 150
+        });
+
+        new Sortable(target, {
+            group: 'shared',
+            animation: 150
+        });
+
+        function checkScramble() {
+            const correctOrder = [
+                "if score >= 100:",
+                "print(\"You won!\")",
+                "elif score >= 50:",
+                "print(\"Good job!\")",
+                "else:",
+                "print(\"Keep trying!\")"
+            ];
+            const userOrder = Array.from(target.children).map(child => child.textContent.trim());
+            
+            const result = document.getElementById('scramble-result');
+            if (JSON.stringify(correctOrder) === JSON.stringify(userOrder)) {
+                result.textContent = "Perfect! The code is in the correct order.";
+                result.style.color = 'green';
+            } else {
+                result.textContent = "Not quite right. The logic is out of order. Try again!";
+                result.style.color = 'red';
+            }
+        }
+    </script>
+    <!-- Using a CDN for SortableJS for simplicity in this self-contained file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</body>
+</html>

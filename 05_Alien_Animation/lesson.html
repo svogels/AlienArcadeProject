@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 5: Creating the Alien & Animation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .animation-simulator {
+            background: #e0e0e0;
+            height: 100px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #ccc;
+        }
+        .moving-box {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #e53e3e;
+            top: 30px;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 5: Creating the Alien & Animation</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To add an enemy alien to our game and make it move back and forth automatically.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Animation by updating variables inside a loop</li>
+                <li>Making objects "bounce" off screen edges</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is Animation?</h3>
+            <p>In programming, animation isn't magic. It's just an illusion we create by drawing something, moving it a tiny bit, and then drawing it again, very quickly. When this happens dozens of times per second, our eyes see it as smooth movement.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Think of a flipbook. Each page has a drawing that is slightly different from the one before it. When you flip through the pages rapidly, the character in the drawing appears to move. Our game loop is the hand that flips the pages. Each time the loop runs, it's like turning to a new page where our objects have new positions.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We will give our alien a starting position and a speed. In every single frame of the game loop, we will add the speed to the alien's position. Since the loop runs very fast, this will make the alien glide across the screen.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Animation Simulator</h3>
+            <p>This box below simulates a game loop. The red square's position is being updated in a loop. Use the slider to change its "speed" variable and see how it affects the animation.</p>
+            <div class="animation-simulator">
+                <div id="moving-box" class="moving-box"></div>
+            </div>
+            <label for="speed-slider">Speed:</label>
+            <input type="range" id="speed-slider" min="1" max="20" value="5" style="width: 100%;">
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Define Alien Variables</h4>
+        <p>Just like our player, the alien needs variables to define its properties. Let's add these near the top of our script with the other variables. We'll give it a colour, size, starting position, and a speed.</p>
+        <pre><code># Alien properties
+ALIEN_COLOR = (239, 68, 68) # A reddish color
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3</code></pre>
+
+        <h4>Step 2: Draw the Alien</h4>
+        <p>Inside the game loop, right after we draw the player, let's draw the alien. The process is exactly the same: create a <code>pygame.Rect</code> and then use <code>pygame.draw.rect()</code>.</p>
+        <pre><code># Inside the loop, after drawing the player
+alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)</code></pre>
+
+        <h4>Step 3: Move the Alien</h4>
+        <p>To make the alien move, we need to update its position in every frame. We'll do this outside the event-handling loop, but inside the main game loop. This ensures the alien moves continuously, whether you're pressing keys or not.</p>
+        <pre><code># Inside the main 'while' loop, after the 'for' loop for events
+alien_x += alien_speed</code></pre>
+
+        <h4>Step 4: Make the Alien Bounce</h4>
+        <p>If we run the code now, the alien will fly off the right side of the screen forever! We need to check if it has hit an edge. If it hits the right edge OR the left edge, we reverse its direction. We can do this easily by multiplying its speed by -1. (e.g., if speed is 3, it becomes -3; if it's -3, it becomes 3).</p>
+        <pre><code># After updating alien_x
+if alien_x <= 0 or alien_x >= screen_width - alien_width:
+    alien_speed *= -1 # Reverse the speed</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code for <code>game_activity_05.py</code>. Notice where the new lines are added.</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 5")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68) # --- NEW
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5
+
+# --- NEW: Alien properties ---
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+
+    # --- NEW: Alien Movement Logic ---
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - alien_width:
+        alien_speed *= -1 # Reverse direction
+
+    # Drawing
+    screen.fill(BLACK)
+    
+    # Draw Player
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    # Draw Alien --- NEW
+    alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you make the alien move up and down instead of left and right? You'll need to create an <code>alien_speed_y</code> variable, update <code>alien_y</code> in the loop, and check if it hits the top (<code>y <= 0</code>) or bottom of the screen.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        // Animation Simulator Logic
+        const box = document.getElementById('moving-box');
+        const slider = document.getElementById('speed-slider');
+        const container = box.parentElement;
+        
+        let position = 0;
+        let direction = 1;
+
+        function animate() {
+            let speed = parseInt(slider.value);
+            const containerWidth = container.clientWidth;
+            const boxWidth = box.clientWidth;
+
+            position += speed * direction;
+
+            if (position > containerWidth - boxWidth || position < 0) {
+                direction *= -1;
+                position += speed * direction; // ensure it doesn't get stuck
+            }
+            
+            box.style.left = position + 'px';
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 7: Lists and Spawning Bullets</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        button, select {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #5a6fd8;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 7: Lists and Spawning Bullets</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To make our player shoot a bullet when we press the space bar.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>The List data structure <code>[]</code></li>
+                <li>Adding items to a list with the <code>.append()</code> method</li>
+                <li>Creating new objects (bullets) during the game</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a List?</h3>
+            <p>A list is a special type of variable that can hold multiple items in a specific order. It's like a container with numbered slots. You can add things to it, remove things from it, and look at what's in any given slot.</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Imagine a train. Each carriage is an item in the list, and the whole train is the list itself. When you want to add a new passenger, you just hook a new carriage onto the end of the train. This is what the <code>.append()</code> method does.</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>We need a list to keep track of all the bullets on the screen. We don't know how many bullets the player will fire. Sometimes there might be zero, sometimes there might be ten! A list is perfect because it can grow and shrink as needed. When the player fires, we will add a new bullet object to our list of bullets.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding: Fill in the Blanks</h3>
+            <p>Complete the sentences about Python lists.</p>
+            <div id="cloze-activity">
+                <p>
+                    In Python, a list is created using
+                    <select id="blank1">
+                        <option value="">---</option>
+                        <option value="incorrect">()</option>
+                        <option value="correct">[]</option>
+                        <option value="incorrect">{}</option>
+                    </select>
+                    brackets. To add a new item to the end of a list called `my_list`, you would use the command `my_list`.
+                    <select id="blank2">
+                        <option value="">---</option>
+                        <option value="correct">append()</option>
+                        <option value="incorrect">add()</option>
+                        <option value="incorrect">insert()</option>
+                    </select>.
+                    This makes lists very useful for managing collections of items that can
+                    <select id="blank3">
+                        <option value="">---</option>
+                        <option value="incorrect">only shrink</option>
+                        <option value="incorrect">stay the same size</option>
+                        <option value="correct">grow and shrink</option>
+                    </select>
+                    during your program.
+                </p>
+                <button onclick="checkCloze()">Check My Answers</button>
+                <p id="cloze-result" class="interactive-result"></p>
+            </div>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Define Bullet Properties</h4>
+        <p>At the top of our script, let's define the properties for our bullets, like their colour, size, and speed. We also need to create an empty list to store all the bullets that are currently on the screen.</p>
+        <pre><code># Bullet properties
+BULLET_COLOR = (255, 255, 0) # Yellow
+bullet_width = 5
+bullet_height = 10
+bullet_speed = 10
+bullets = [] # --- NEW: An empty list to hold all bullets</code></pre>
+
+        <h4>Step 2: Listen for the Space Bar</h4>
+        <p>Inside our event loop, we need to check for a new key press: the space bar. Its special name is <code>pygame.K_SPACE</code>. When the space bar is pressed, we will create a new bullet.</p>
+        <pre><code># Inside the KEYDOWN event check
+elif event.key == pygame.K_SPACE:
+    # Code to fire a bullet goes here</code></pre>
+
+        <h4>Step 3: Create and Add a New Bullet</h4>
+        <p>When the space bar is pressed, we need to create a new bullet. What is a bullet? In our game, it's just a rectangle. We can create a <code>pygame.Rect</code> object that represents the new bullet. Its starting X position should be the player's current X, and its Y position should be the player's Y. Then, we <code>.append()</code> this new bullet rectangle to our <code>bullets</code> list.</p>
+        <pre><code>elif event.key == pygame.K_SPACE:
+    bullet_x = player_x + (player_width / 2) - (bullet_width / 2) # Center of the player
+    bullet_y = player_y
+    new_bullet = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
+    bullets.append(new_bullet)</code></pre>
+
+        <h4>Step 4: Draw the Bullets</h4>
+        <p>We can't just draw one bullet, we have to draw ALL of them. We need to loop through our <code>bullets</code> list and draw each one. We'll learn how to do this properly with a <code>for</code> loop in the next lesson. For today, we'll just draw the first bullet if it exists, to prove it's working. This is temporary!</p>
+        <pre><code># In the drawing section
+if len(bullets) > 0:
+    pygame.draw.rect(screen, BULLET_COLOR, bullets[0])</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the code for <code>game_activity_07.py</code>. We are now spawning bullets, but they don't move yet. We'll fix that next!</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 7")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68)
+BULLET_COLOR = (255, 255, 0) # --- NEW
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5
+
+# Alien properties
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+
+# --- NEW: Bullet properties ---
+bullet_width = 5
+bullet_height = 10
+bullet_speed = 10
+bullets = [] # An empty list to hold all bullet Rects
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+            # --- NEW: Fire a bullet ---
+            elif event.key == pygame.K_SPACE:
+                # Create a new bullet rectangle at the player's current position
+                bullet_x = player_x + (player_width / 2) - (bullet_width / 2) # Center it
+                bullet_y = player_y
+                new_bullet = pygame.Rect(bullet_x, bullet_y, bullet_width, bullet_height)
+                # Add the new bullet to our list
+                bullets.append(new_bullet)
+
+    # Alien Movement Logic
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - alien_width:
+        alien_speed *= -1
+
+    # Drawing
+    screen.fill(BLACK)
+    
+    # Draw Player
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    # Draw Alien
+    alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+
+    # --- NEW: Draw all bullets in the list ---
+    for bullet in bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, bullet)
+
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you change the bullet's colour and size? Try making the bullets long, thin, green lasers!</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        function checkCloze() {
+            const answers = {
+                blank1: 'correct',
+                blank2: 'correct',
+                blank3: 'correct'
+            };
+            let correctCount = 0;
+            for (const blank in answers) {
+                const select = document.getElementById(blank);
+                if (select.value === answers[blank]) {
+                    correctCount++;
+                    select.style.border = '2px solid green';
+                } else {
+                    select.style.border = '2px solid red';
+                }
+            }
+            const result = document.getElementById('cloze-result');
+            if (correctCount === 3) {
+                result.textContent = "Excellent! You understand the basics of lists.";
+                result.style.color = 'green';
+            } else {
+                result.textContent = `You got ${correctCount} out of 3 correct. Have another try!`;
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

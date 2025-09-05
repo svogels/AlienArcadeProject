@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 1: Our First Window & The Game Loop</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .check-understanding {
+            border-left: 5px solid #667eea;
+            padding-left: 25px;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        button, select {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #5a6fd8;
+        }
+        .interactive-result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 1: Our First Window & The Game Loop</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To create a blank game window and make it stay open using a game loop.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 New Concepts We'll Learn:</h3>
+            <ul>
+                <li>Importing a library (<code>import pygame</code>)</li>
+                <li>Initialising a library (<code>pygame.init()</code>)</li>
+                <li>Creating a game window</li>
+                <li>The Game Loop (using a <code>while</code> loop)</li>
+                <li>Handling the "quit" event</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>🤔 What is a Game Loop?</h3>
+            <p>Imagine you're telling a story that needs to keep going. You might say, "The adventure continues as long as the hero is still searching for the treasure." A <code>while</code> loop in programming is very similar. It tells the computer to keep doing a set of actions "while" a certain condition is true. For our game, we want it to run forever, so we'll say <code>while True</code>!</p>
+            <h3>🖼️ Visual Metaphor:</h3>
+            <p>Think of a hamster running on its wheel. The wheel goes around and around without stopping. Our game loop is like that wheel. It constantly repeats a cycle of checking for player input, updating the game's state, and drawing everything on the screen. This happens so fast it looks like smooth motion!</p>
+            <h3>🎮 How We'll Use It in Our Game:</h3>
+            <p>The game loop is the heartbeat of our program. Inside the loop, we will eventually check for key presses, move the player, move the aliens, and check for collisions. For today, its only job is to keep the window open and check if the player has tried to close it.</p>
+        </div>
+
+        <div class="info-box check-understanding">
+            <h3>🧠 Check Your Understanding:</h3>
+            <p>Fill in the blanks to complete the sentence about the game loop.</p>
+            <div id="cloze-activity">
+                <p>
+                    A game loop is a
+                    <select id="blank1">
+                        <option value="">---</option>
+                        <option value="correct">while</option>
+                        <option value="incorrect">for</option>
+                        <option value="incorrect">if</option>
+                    </select>
+                    loop that runs continuously. It's the core of the game, responsible for
+                    <select id="blank2">
+                        <option value="">---</option>
+                        <option value="incorrect">starting</option>
+                        <option value="correct">updating</option>
+                        <option value="incorrect">ending</option>
+                    </select>
+                    the game state and rendering graphics. Without it, the game window would appear and then immediately
+                    <select id="blank3">
+                        <option value="">---</option>
+                        <option value="incorrect">crash</option>
+                        <option value="incorrect">run</option>
+                        <option value="correct">close</option>
+                    </select>.
+                </p>
+                <button onclick="checkCloze()">Check My Answers</button>
+                <p id="cloze-result" class="interactive-result"></p>
+            </div>
+        </div>
+
+        <h3>✍️ Let's Build Our Code, Step-by-Step</h3>
+
+        <h4>Step 1: Import Pygame</h4>
+        <p>First, we need to tell our program that we want to use all the cool features from the Pygame library. The <code>import</code> keyword does exactly that.</p>
+        <pre><code>import pygame</code></pre>
+
+        <h4>Step 2: Initialise Pygame</h4>
+        <p>Next, we need to start up all the different parts of Pygame. Calling <code>pygame.init()</code> is like turning the key in a car's ignition. It gets all the Pygame modules ready for us to use.</p>
+        <pre><code>pygame.init()</code></pre>
+
+        <h4>Step 3: Create the Game Window</h4>
+        <p>Now we'll create the window where our game will live. We use <code>pygame.display.set_mode()</code> and give it the width and height of our window (800 pixels wide by 600 pixels high). We also set a caption to appear in the title bar.</p>
+        <pre><code>screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Alien Arcade")</code></pre>
+
+        <h4>Step 4: The Game Loop</h4>
+        <p>This is the most important part. We create a <code>while True:</code> loop that will run forever. Inside this loop, we will check for any events happening, like closing the window.</p>
+        <pre><code>running = True
+while running:
+    # This is where all our game logic will go!
+    pass # 'pass' is a placeholder that does nothing.</code></pre>
+
+        <h4>Step 5: Handling the Quit Event</h4>
+        <p>Inside our loop, we need to check if the user has done anything. Pygame puts all user actions into an "event queue". We use a <code>for</code> loop to check every event. If the event is <code>pygame.QUIT</code> (which happens when you click the 'X' on the window), we set our <code>running</code> variable to <code>False</code> to exit the loop.</p>
+        <pre><code>for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+        running = False</code></pre>
+
+        <h3>✅ Full Code for This Activity:</h3>
+        <p>Here is the complete code for today. Copy and paste this into your <code>game_activity_01.py</code> file.</p>
+        <pre><code>import pygame
+
+# 1. Initialise Pygame
+pygame.init()
+
+# 2. Create the game window
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 1")
+
+# 3. The Game Loop
+running = True
+while running:
+    # 4. Event Handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+# 5. Quit Pygame
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>⭐ Challenge Task:</h3>
+            <p>Can you change the width and height of the game window? Try making it 1000 pixels wide and 800 pixels high. Can you also change the caption in the title bar to include your name?</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+
+    <script>
+        function checkCloze() {
+            const answers = {
+                blank1: 'correct',
+                blank2: 'correct',
+                blank3: 'correct'
+            };
+            let correctCount = 0;
+            let total = 0;
+            for (const blank in answers) {
+                total++;
+                const select = document.getElementById(blank);
+                if (select.value === answers[blank]) {
+                    correctCount++;
+                    select.style.borderColor = 'green';
+                } else {
+                    select.style.borderColor = 'red';
+                }
+            }
+            const result = document.getElementById('cloze-result');
+            if (correctCount === total) {
+                result.textContent = "Great job! You've got it!";
+                result.style.color = 'green';
+            } else {
+                result.textContent = `You got ${correctCount} out of ${total} correct. Try again!`;
+                result.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

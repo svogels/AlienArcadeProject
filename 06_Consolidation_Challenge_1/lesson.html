@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 6: Consolidation & Creative Challenge 1</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: #333;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            background: -webkit-linear-gradient(left, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 2.5em;
+        }
+        h3, h4 {
+            color: #667eea;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .challenge-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .challenge-list li {
+            background: white;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .challenge-list h4 {
+            margin-top: 0;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Activity 6: Consolidation & Creative Challenge 1</h2>
+
+        <div class="info-box">
+            <h3>🎯 Goal For This Lesson:</h3>
+            <p>To practice the skills we've learned by modifying the game code and experimenting with new ideas.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 What is Consolidation?</h3>
+            <p>This is a "workshop" lesson. It means there are no new concepts to learn! Instead, this is your chance to be creative and experiment with the code we've written so far. The best way to get better at coding is by trying things out, making mistakes, and figuring out how to fix them. Your `game_activity_06.py` file starts with the complete code from last lesson.</p>
+        </div>
+
+        <div class="info-box challenge-list">
+            <h3>🧠 Creative Challenges</h3>
+            <p>Try to complete at least three of the challenges below. Don't be afraid to break things! You can always look back at the code from lesson 5 if you get stuck.</p>
+            <ul>
+                <li>
+                    <h4>Challenge 1: Speed Demon</h4>
+                    <p>Find the <code>player_speed</code> variable. Change its value to make the player move much faster or much slower. What happens if you make it a negative number?</p>
+                </li>
+                <li>
+                    <h4>Challenge 2: Colour Swap</h4>
+                    <p>Change the RGB values for <code>PLAYER_COLOR</code> and <code>ALIEN_COLOR</code>. You can use the color mixer from Lesson 2 to find new colours. Can you make the player a bright green and the alien a hot pink?</p>
+                </li>
+                <li>
+                    <h4>Challenge 3: Bouncing Alien</h4>
+                    <p>Right now, the player can move off the screen. Look at the code that makes the alien "bounce" off the walls. Can you copy and adapt that logic to stop the player from going past the left and right edges of the window?</p>
+                </li>
+                <li>
+                    <h4>Challenge 4: A Second Alien</h4>
+                    <p>This one is tricky! Can you create a *second* alien? You would need to create new variables for it (e.g., <code>alien2_x</code>, <code>alien2_y</code>, <code>alien2_speed</code>), update its position in the loop, and draw it to the screen. Can you make it move at a different speed or in a different direction?</p>
+                </li>
+                 <li>
+                    <h4>Challenge 5: Vertical Movement</h4>
+                    <p>Make the alien move up and down instead of side-to-side. You'll need to modify the alien's movement logic to update its `y` position instead of its `x` position, and check if it hits the top or bottom of the screen.</p>
+                </li>
+            </ul>
+        </div>
+
+        <h3>✅ Full Code to Start With:</h3>
+        <p>Your <code>game_activity_06.py</code> file should already contain this code. Use this as your starting point for the challenges!</p>
+        <pre><code>import pygame
+
+pygame.init()
+
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Alien Arcade - Activity 6")
+
+# Colours
+BLACK = (0, 0, 0)
+PLAYER_COLOR = (66, 135, 245)
+ALIEN_COLOR = (239, 68, 68)
+
+# Player properties
+player_width = 50
+player_height = 50
+player_x = (screen_width - player_width) / 2
+player_y = screen_height - player_height - 10
+player_speed = 5
+
+# Alien properties
+alien_width = 40
+alien_height = 40
+alien_x = 100
+alien_y = 50
+alien_speed = 3
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                player_x -= player_speed
+            elif event.key == pygame.K_RIGHT:
+                player_x += player_speed
+
+    # Alien Movement Logic
+    alien_x += alien_speed
+    if alien_x <= 0 or alien_x >= screen_width - alien_width:
+        alien_speed *= -1 # Reverse direction
+
+    # Drawing
+    screen.fill(BLACK)
+    
+    # Draw Player
+    player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
+    pygame.draw.rect(screen, PLAYER_COLOR, player_rect)
+
+    # Draw Alien
+    alien_rect = pygame.Rect(alien_x, alien_y, alien_width, alien_height)
+    pygame.draw.rect(screen, ALIEN_COLOR, alien_rect)
+
+    pygame.display.flip()
+
+pygame.quit()
+</code></pre>
+
+        <div class="info-box">
+            <h3>🚀 How Are You Feeling?</h3>
+            <p>Drag the slider to show how confident you feel after this lesson.</p>
+            <input type="range" min="1" max="5" value="3" style="width: 100%;">
+        </div>
+    </div>
+</body>
+</html>
